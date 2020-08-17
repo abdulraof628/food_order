@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_order/pages/home.dart';
 
 class AddFood extends StatefulWidget{
   @override
@@ -37,15 +38,20 @@ class _AddFoodState extends State<AddFood> {
                 Padding(
                   padding: EdgeInsets.only(top: 16.0, right: 16.0),
                   child: FlatButton(
-                    color: Colors.blue, onPressed: (){},
+                    color: Colors.blue, 
                     child: Text('Save'),
+                    onPressed: (){
+                    },
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 16.0),
                   child: FlatButton(
-                    color: Colors.grey[200], onPressed: (){},
+                    color: Colors.grey[200], 
                     child: Text('Cancel'),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
                   ),
                 ),
               ],
