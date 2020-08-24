@@ -15,6 +15,7 @@ class _AddFoodState extends State<AddFood> {
         appBar: 
           AppBar(
             title: Text('Add New Item'),
+            backgroundColor: Colors.purple,
           ),
         body: 
           ListView(
@@ -85,46 +86,6 @@ class _AddFoodState extends State<AddFood> {
                 ),
               ]
           )
-        // body: Column(
-        //   children: [
-        //     Padding(
-        //       padding: EdgeInsets.all(16.0),
-        //       child: new 
-        //     ),
-        //     Padding(
-        //       padding: EdgeInsets.only(left: 16.0, right: 16.0),
-        //       child: new TextFormField(
-        //         decoration: InputDecoration(
-        //           labelText: 'Price'
-        //         ),
-        //       )
-        //     ),
-        //       Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: [
-        //           Padding(
-        //             padding: EdgeInsets.only(top: 16.0, right: 16.0),
-        //             child: FlatButton(
-        //               color: Colors.blue, 
-        //               child: Text('Save'),
-        //               onPressed: (){
-        //               },
-        //             ),
-        //           ),
-        //           Padding(
-        //             padding: EdgeInsets.only(top: 16.0),
-        //             child: FlatButton(
-        //               color: Colors.grey[200], 
-        //               child: Text('Cancel'),
-        //               onPressed: (){
-        //                 Navigator.pop(context);
-        //               },
-        //             ),
-        //           ),
-        //         ],
-        //       )
-        //   ],
-        // ),
       );
   }
 }
