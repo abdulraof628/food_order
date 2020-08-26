@@ -12,28 +12,13 @@ class Home extends StatefulWidget{
 
 class _Home extends State<Home> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Ordered',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: Profile',
-      style: optionStyle,
-    ),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+  
   @override
   Widget build(BuildContext context) {
     
@@ -42,7 +27,7 @@ class _Home extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Food Ordering System'),
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.deepPurple[300],
         actions: <Widget>[
           IconButton(icon: Icon(Icons.add),onPressed: (){
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AddFood()));
@@ -51,7 +36,7 @@ class _Home extends State<Home> {
         ),
       body: Center(
         child: Container(
-          padding: const EdgeInsets.all(10.0),
+          // padding: const EdgeInsets.all(10.0),
           child: StreamBuilder<QuerySnapshot>(
             stream: foods.snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -63,10 +48,13 @@ class _Home extends State<Home> {
               }
               else{
                 return new ListView(
+                  // padding: EdgeInsets.only(bottom: 10.0),
                   children: snapshot.data.docs.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document.data()['name']),
-                      subtitle: new Text(document.data()['price']),
+                    return ListTile(
+                        leading: Icon(Icons.fastfood, size: 50, color: Colors.amber),
+                        title: new Text(document.data()['name']),
+                        subtitle: new Text('RM ' + document.data()['price']),
+                        onTap: (){},
                     );
                   }).toList(),
                 );
@@ -91,7 +79,7 @@ class _Home extends State<Home> {
             ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red,
+        selectedItemColor: Colors.deepPurple,
         onTap: _onItemTapped,
       ),
     );

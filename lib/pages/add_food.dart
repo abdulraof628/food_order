@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddFood extends StatefulWidget{
   @override
@@ -7,7 +8,15 @@ class AddFood extends StatefulWidget{
 }
 
 class _AddFoodState extends State<AddFood> {
+
+  final db = FirebaseFirestore.instance;
+
+  TextEditingController _name = TextEditingController();
+  TextEditingController _price = TextEditingController();
   
+  void addFood() async{
+    await db.collection('foods').add({'name': _name.text, 'price': _price.text});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,33 +36,19 @@ class _AddFoodState extends State<AddFood> {
                       padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 10),
                       child: TextFormField(
                         autofocus: true,
+                        controller: _name,
                         decoration: InputDecoration(
                           labelText: 'Name'
                         ),
-                        validator: (val){
-                          if(val.isEmpty){
-                            return 'Please enter name';
-                          }
-                          else{
-                            return null;
-                          }
-                        },
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 10),
                       child: TextFormField(
+                        controller: _price,
                         decoration: InputDecoration(
                           labelText: 'Price'
                         ),
-                        validator: (val){
-                          if(val.isEmpty){
-                            return 'Please enter price';
-                          }
-                          else{
-                            return null;
-                          }
-                        },
                       ),
                     ),
                   ],
@@ -68,6 +63,8 @@ class _AddFoodState extends State<AddFood> {
                         textColor: Colors.white,
                         child: Text('Save'),
                         onPressed: (){
+                          addFood();
+                          Navigator.pop(context);
                         },
                       ),
                     ),
