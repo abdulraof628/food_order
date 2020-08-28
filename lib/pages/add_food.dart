@@ -13,6 +13,7 @@ class _AddFoodState extends State<AddFood> {
 
   TextEditingController _name = TextEditingController();
   TextEditingController _price = TextEditingController();
+  final _addFood = GlobalKey<FormState>();
   
   void addFood() async{
     await db.collection('foods').add({'name': _name.text, 'price': _price.text});
@@ -26,8 +27,10 @@ class _AddFoodState extends State<AddFood> {
             title: Text('Add New Item'),
             backgroundColor: Colors.purple,
           ),
-        body: 
-          ListView(
+        body: Center(
+          child: Form(
+            key: _addFood,
+            child: ListView(
               children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,6 +43,8 @@ class _AddFoodState extends State<AddFood> {
                         decoration: InputDecoration(
                           labelText: 'Name'
                         ),
+                        validator: (value) =>
+                          value.isEmpty ? 'Please enter food name' : null,
                       ),
                     ),
                     Padding(
@@ -49,6 +54,8 @@ class _AddFoodState extends State<AddFood> {
                         decoration: InputDecoration(
                           labelText: 'Price'
                         ),
+                        validator: (value) =>
+                          value.isEmpty ? 'Please enter price' : null,
                       ),
                     ),
                   ],
@@ -63,8 +70,10 @@ class _AddFoodState extends State<AddFood> {
                         textColor: Colors.white,
                         child: Text('Save'),
                         onPressed: (){
-                          addFood();
-                          Navigator.pop(context);
+                          if(_addFood.currentState.validate()){
+                            addFood();
+                            Navigator.pop(context);
+                          }
                         },
                       ),
                     ),
@@ -82,7 +91,9 @@ class _AddFoodState extends State<AddFood> {
                   ],
                 ),
               ]
+            )
           )
+        )
       );
   }
 }
