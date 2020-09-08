@@ -25,7 +25,7 @@ class _AddFoodState extends State<AddFood> {
         appBar: 
           AppBar(
             title: Text('Add New Item'),
-            backgroundColor: Colors.purple,
+            backgroundColor: Colors.deepPurple[300],
           ),
         body: Center(
           child: Form(
@@ -66,7 +66,7 @@ class _AddFoodState extends State<AddFood> {
                     Padding(
                       padding: EdgeInsets.only(top: 20, right: 20),
                       child: RaisedButton(
-                        color: Colors.blue,
+                        color: Colors.deepPurple,
                         textColor: Colors.white,
                         child: Text('Save'),
                         onPressed: (){

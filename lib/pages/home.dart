@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_order/pages/add_food.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:food_order/pages/menu.dart';
+import 'package:food_order/pages/order.dart';
+import 'package:food_order/pages/profile.dart';
 
 class Home extends StatefulWidget{
   Home({Key key}) : super(key: key);
@@ -11,19 +14,64 @@ class Home extends StatefulWidget{
 }
 
 class _Home extends State<Home> {
-  int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
+  /* Declaration */
+  int selectedIndex = 0;
+  final db = FirebaseFirestore.instance;
+  String _deleteId;
+  CollectionReference foods = FirebaseFirestore.instance.collection('foods');
+  
+  List<Widget> tabPages = [
+    Menu(),
+    Order(),
+    Profile()
+  ];
+
+  void onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
   }
+  /* Modal */
+  Future<void> _deleteConfirmation() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure want to delete this item?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Delete'),
+              textColor: Colors.red,
+              onPressed: () {
+                db.collection("foods").doc(_deleteId).delete();
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              textColor: Colors.blue,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  /* Modal */
   
   @override
   Widget build(BuildContext context) {
-    
-    CollectionReference foods = FirebaseFirestore.instance.collection('foods');
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Food Ordering System'),
@@ -36,7 +84,6 @@ class _Home extends State<Home> {
         ),
       body: Center(
         child: Container(
-          // padding: const EdgeInsets.all(10.0),
           child: StreamBuilder<QuerySnapshot>(
             stream: foods.snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -47,17 +94,27 @@ class _Home extends State<Home> {
                 return Text('No food available!');
               }
               else{
-                return new ListView(
-                  // padding: EdgeInsets.only(bottom: 10.0),
-                  children: snapshot.data.docs.map((DocumentSnapshot document) {
-                    return ListTile(
-                        leading: Icon(Icons.fastfood, size: 50, color: Colors.amber),
+                if(snapshot.data.docs.isNotEmpty)
+                  return new ListView(
+                    // padding: EdgeInsets.only(bottom: 10.0),
+                    children: snapshot.data.docs.map((DocumentSnapshot document) {
+                      return ListTile(
+                        leading: Icon(Icons.fastfood, size: 50, color: Colors.lightBlueAccent),
                         title: new Text(document.data()['name']),
                         subtitle: new Text('RM ' + document.data()['price']),
-                        onTap: (){},
-                    );
-                  }).toList(),
-                );
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete, size: 30, color: Colors.red), 
+                          onPressed: (){
+                            _deleteConfirmation();
+                            _deleteId = document.id;
+                          }
+                        ),
+                      );
+                    }).toList(),
+                  );
+                else{
+                  return Text('No food available!');
+                }
               }
             },
           ),
@@ -67,7 +124,7 @@ class _Home extends State<Home> {
         items: [
           BottomNavigationBarItem(
             icon: new Icon(Icons.home),
-            title: Text('Home'),
+            title: Text('Menu'),
             ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.mail),
@@ -78,9 +135,9 @@ class _Home extends State<Home> {
             title: Text('Profile'),
             ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.deepPurple,
-        onTap: _onItemTapped,
+        currentIndex: selectedIndex,
+        fixedColor: Colors.deepPurple,
+        onTap: onItemTapped,
       ),
     );
   }
